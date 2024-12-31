@@ -1,3 +1,5 @@
+// prefectly working code with add more button of editinvoice this is backup code 
+
 import React, { useEffect, useState } from "react";
 import Layout from "../../layout/Layout";
 import axios from "axios";
@@ -7,6 +9,7 @@ import {
   IconInfoCircle,
   IconPlus,
   IconTrash,
+  IconX,
 } from "@tabler/icons-react";
 import { Button } from "@mantine/core";
 import { useNavigate, useParams } from "react-router-dom";
@@ -31,6 +34,33 @@ const EditInvoice = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [vendor, setVendor] = useState([]);
   const [buyer, setBuyer] = useState([]);
+   const [showBillTable, setShowBillTable] = useState(false);
+    const [invoiceBill, setInvoiceBill] = useState([]);
+
+
+    const fetchInvoiceBills = async () => {
+        if (!invoice.invoice_from_id || !invoice.invoice_to_id) return;
+    
+        try {
+          setIsButtonDisabled(true);
+          const token = localStorage.getItem("token");
+          const response = await axios.get(
+            `${BASE_URL}/api/panel-fetch-invoice-billingno/${invoice.invoice_to_id}/${invoice.invoice_from_id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          setInvoiceBill(response.data?.invoice_billno || []);
+        } catch (error) {
+          console.error("Error fetching invoice bills", error);
+          toast.error("Error fetching invoice bill numbers");
+        } finally {
+          setIsButtonDisabled(false);
+        }
+      };
+
 
   const fetchInvoiceEdit = async () => {
     try {
@@ -117,7 +147,41 @@ const EditInvoice = () => {
     fetchBuyer();
   }, []);
 
- 
+ const handleAddMore = async () => {
+    await fetchInvoiceBills();
+    setShowBillTable(true);
+  };
+
+  const onSelectBill = (bill) => {
+      const isAlreadySelected = users.some(
+        (user) => user.invoice_sub_bill_no === bill.billing_no
+      );
+  
+      if (isAlreadySelected) {
+        toast.error("This bill is already added");
+        return;
+      }
+  
+      const newUser = {
+        invoice_sub_bill_no: bill.billing_no,
+        invoice_sub_total: bill.billing_total_amount,
+        invoice_comm: "0",
+      };
+  
+      setUsers([...users, newUser]);
+    //   setShowBillTable(false);
+  
+      // Update invoice total
+      const newTotal = users.reduce(
+        (sum, user) => sum + (parseFloat(user.invoice_sub_total) || 0),
+        0
+      ) + parseFloat(bill.billing_total_amount);
+      
+      setInvoice(prev => ({
+        ...prev,
+        invoice_total: newTotal.toString()
+      }));
+    };
 
   const onChangeUser = (index, name, value) => {
     if (name === "invoice_sub_total" || name === "invoice_comm" || name === "invoice_sub_bill_no") {
@@ -422,15 +486,70 @@ const EditInvoice = () => {
                 </div>
               </div>
             ))}
-
+{!showBillTable && (
             <div>
               <Button
                 className="text-center mt-2 text-sm font-[400] cursor-pointer flex items-center gap-1 text-white bg-blue-600 hover:bg-red-700 p-2 rounded-lg shadow-md"
-           
+                onClick={handleAddMore}
               >
                 <IconPlus className="w-5 h-5" /> Add More
               </Button>
             </div>
+              )}
+            {showBillTable && (
+                   <div className="mt-4">
+                              <div className="flex justify-between items-center mb-2">
+                                <h3 className="text-lg font-semibold">Select Bills</h3>
+                                <IconX 
+                                  onClick={() => setShowBillTable(false)}
+                                  className="cursor-pointer hover:text-red-600 w-6 h-6"
+                                />
+                              </div>
+            <div className="overflow-x-auto mt-4">
+              <table className="min-w-full bg-white border border-gray-300 rounded-lg">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="p-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-left">
+                      Select
+                    </th>
+                    <th className="p-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-left">
+                      Bill No
+                    </th>
+                    <th className="p-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-right">
+                      Amount
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {invoiceBill.map((bill) => (
+                    <tr
+                      key={bill.billing_no}
+                      className="hover:bg-gray-50 cursor-pointer"
+                      onClick={() => onSelectBill(bill)}
+                    >
+                      <td className="p-3 text-left">
+                        <input
+                          type="checkbox"
+                          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          checked={users.some(
+                            (user) => user.invoice_sub_bill_no === bill.billing_no
+                          )}
+                          onChange={() => {}}
+                        />
+                      </td>
+                      <td className="p-3 text-sm text-gray-900">
+                        {bill.billing_no}
+                      </td>
+                      <td className="p-3 text-sm text-gray-900 text-right">
+                        {bill.billing_total_amount}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            </div>
+          )}
           </div>
 
           {/* Form Actions */}

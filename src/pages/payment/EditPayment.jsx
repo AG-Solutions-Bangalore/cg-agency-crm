@@ -301,16 +301,7 @@ const removeUser = (index) => {
       toast.success("Payment Updated Sucessfully");
 
       navigate("/payment-list");
-      setPayment({
-        pay_date: todayback,
-        pay_year: "",
-        payment_from_id: "",
-        payment_to_id: "",
-        billing_to_id: "",
-        pay_total: "",
-        pay_reference: "",
-        payment_data: users,
-      });
+     
     });
   };
 

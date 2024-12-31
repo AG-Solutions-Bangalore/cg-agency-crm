@@ -83,7 +83,39 @@ const Menuitems = () => [
     id: uniqueId(),
     title: "Report",
     icon: IconReceipt,
-    href: "/report-list",
+    subItems: [
+      {
+        id: uniqueId(),
+        title: "Supplier",
+        icon: IconCopy,
+        href: "/report-supplier",
+      },
+      {
+        id: uniqueId(),
+        title: "Buyer",
+        icon: IconCopy,
+        href: "/report-buyer",
+      },
+      {
+        id: uniqueId(),
+        title: "Billing",
+        icon: IconCopy,
+        href: "/report-agencies-form",
+      },
+      {
+        id: uniqueId(),
+        title: "Payment",
+        icon: IconCopy,
+        href: "/report-agencies-form",
+      },
+      {
+        id: uniqueId(),
+        title: "Invoice",
+        icon: IconCopy,
+        href: "/report-agencies-form",
+      },
+    
+    ],
   },
   {
     id: uniqueId(),
