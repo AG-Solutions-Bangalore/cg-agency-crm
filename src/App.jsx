@@ -21,6 +21,10 @@ import CreateBilling from "./pages/billing/CreateBilling";
 import EditBilling from "./pages/billing/EditBilling";
 import CreatePayment from "./pages/payment/CreatePayment";
 import EditPayment from "./pages/payment/EditPayment";
+import CreateInvoiceList from "./pages/invoice/CreateInvoiceList";
+import EditInvoice from "./pages/invoice/EditInvoice";
+import SupplierReport from "./pages/report/supplier/SupplierReport";
+import BuyerReport from "./pages/report/buyer/BuyerReport";
 
 
 const App = () => {
@@ -54,6 +58,12 @@ const App = () => {
         {/* invoice  */}
        
         <Route path="/invoice-list" element={<InvoiceList />} />
+        <Route path="/createInvoice" element={<CreateInvoiceList />} />
+        <Route path="/invoice-edit/:id" element={<EditInvoice />} />
+
+        {/* reports  */}
+        <Route path="/report-supplier" element={<SupplierReport />} />
+        <Route path="/report-buyer" element={<BuyerReport />} />
         
       </Routes>
     </>
