@@ -1,43 +1,75 @@
-import React, { useEffect, useState } from "react";
-import Layout from "../../layout/Layout";
-import axios from "axios";
+// this is the perfect code that run peretcly adn sync perfetcly with button conrtrol 
+import React, { useState, useEffect, useContext } from "react";
+
+
+
 import BASE_URL from "../../base/BaseUrl";
 import {
-  IconArrowBack,
-  IconInfoCircle,
-  IconPlus,
-  IconTrash,
-} from "@tabler/icons-react";
-import { Button } from "@mantine/core";
-import { useNavigate, useParams } from "react-router-dom";
+  Card,
+  CardHeader,
+  Typography,
+  Button,
+  Checkbox,
+  Spinner,
+} from "@material-tailwind/react";
 import { toast } from "sonner";
-
-
-const EditInvoice = () => {
-  const { id } = useParams();
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { ContextPanel } from "../../context/ContextPanel";
+import Layout from "../../layout/Layout";
+const UserManagement = () => {
+  const [permissions, setPermissions] = useState({});
+  const [pageSelections, setPageSelections] = useState({});
+  const [columnSelections, setColumnSelections] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [usercontrol, setUsercontrol] = useState(null);
+  const { fetchPermissions } = useContext(ContextPanel);
   const navigate = useNavigate();
-  const currentYear = "2024-25";
 
-  const [invoice, setInvoice] = useState({
-    invoice_date: "",
-    invoice_year: "",
-    invoice_no: "",
-    invoice_from_id: "",
-    invoice_to_id: "",
-    invoice_total: "",
-  });
+  const userTypes = [
+    { id: "1", label: "Test User" },
+    { id: "2", label: "Admin" },
+    { id: "3", label: "Super Admin" },
+  ];
 
-  const [users, setUsers] = useState([]);
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const [vendor, setVendor] = useState([]);
-  const [buyer, setBuyer] = useState([]);
-
-  const fetchInvoiceEdit = async () => {
+  const fetchUserControl = async () => {
     try {
-      setIsButtonDisabled(true);
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `${BASE_URL}/api/panel-fetch-invoice-by-id/${id}`,
+        `${BASE_URL}/api/panel-fetch-usercontrol`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setUsercontrol(response.data.usercontrol);
+      setLoading(false);
+    } catch (error) {
+      setError(error);
+      setLoading(false);
+      toast.error("Failed to fetch user controls");
+    }
+  };
+
+  useEffect(() => {
+    fetchUserControl();
+  }, []);
+
+  const pageOptions = usercontrol
+    ? [...new Set(usercontrol.map((item) => item.pages))]
+    : [];
+
+  const updatePermissions = async (id, updatedData) => {
+    try {
+      const token = localStorage.getItem("token");
+      const payload = {
+        ...updatedData,
+        usertype: updatedData.usertype.join(","),
+      };
+
+      await axios.put(
+        `https://agsrebuild.store/public/api/panel-update-usercontrol/${id}`,
+        payload,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -45,416 +77,223 @@ const EditInvoice = () => {
         }
       );
 
-      // Set invoice details
-      setInvoice({
-        ...response.data?.invoice,
-        invoice_date: response.data?.invoice.invoice_date || "",
-        invoice_year: response.data?.invoice.invoice_year || "",
-        invoice_from_id: response.data?.invoice.invoice_from_id || "",
-        invoice_to_id: response.data?.invoice.invoice_to_id || "",
-        invoice_total: response.data?.invoice.invoice_total || "",
-        invoice_no: response.data?.invoice.invoice_no || "",
-      });
-
-      
-      if (response.data?.invoiceSub && response.data.invoiceSub.length > 0) {
-        setUsers(
-          response.data.invoiceSub.map((sub) => ({
-            id: sub.id,
-            invoice_sub_bill_no: sub.invoice_sub_bill_no || "",
-            invoice_sub_total: sub.invoice_sub_total || "",
-            invoice_comm: sub.invoice_comm || "",
-          }))
-        );
-      }
+      toast.success("User control updated successfully");
+      fetchPermissions();
+      fetchUserControl();
     } catch (error) {
-      console.error("Error fetching invoice edit data", error);
-      toast.error("Error fetching invoice data");
-    } finally {
-      setIsButtonDisabled(false);
-    }
-  };
-
-  const fetchVendor = async () => {
-    try {
-      setIsButtonDisabled(true);
-      const token = localStorage.getItem("token");
-      const response = await axios.get(`${BASE_URL}/api/panel-fetch-vendor`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setVendor(response.data?.vendor);
-    } catch (error) {
-      console.error("Error fetching vendor data", error);
-      toast.error("Error fetching vendor data");
-    } finally {
-      setIsButtonDisabled(false);
-    }
-  };
-
-  const fetchBuyer = async () => {
-    try {
-      setIsButtonDisabled(true);
-      const token = localStorage.getItem("token");
-      const response = await axios.get(`${BASE_URL}/api/panel-fetch-buyer`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setBuyer(response.data?.buyer);
-    } catch (error) {
-      console.error("Error fetching buyer data", error);
-      toast.error("Error fetching buyer data");
-    } finally {
-      setIsButtonDisabled(false);
+      toast.error(
+        error.response?.data?.message || "Failed to update user control"
+      );
     }
   };
 
   useEffect(() => {
-    fetchInvoiceEdit();
-    fetchVendor();
-    fetchBuyer();
-  }, []);
+    if (!usercontrol) return;
+    const newPermissions = {};
+    const newPageSelections = {};
+    const newColumnSelections = {};
 
- 
+    pageOptions.forEach((page) => {
+      newPageSelections[page] = false;
+      newColumnSelections[page] = {};
 
-  const onChangeUser = (index, name, value) => {
-    if (name === "invoice_sub_total" || name === "invoice_comm" || name === "invoice_sub_bill_no") {
-      if (!validateOnlyDigits(value)) return;
-    }
-
-    const updatedUsers = users.map((user, i) => {
-      if (i === index) {
-        const updatedUser = { ...user, [name]: value };
-
-        if (name === "invoice_sub_total" || name === "invoice_comm") {
-          const total = parseFloat(updatedUser.invoice_sub_total) || 0;
-          const comm = parseFloat(updatedUser.invoice_comm) || 0;
-          updatedUser.invoice_price = (total - comm).toFixed(2);
-        }
-
-        return updatedUser;
-      }
-      return user;
-    });
-
-    setUsers(updatedUsers);
-
-    const newTotal = updatedUsers.reduce(
-      (sum, user) => sum + (parseFloat(user.invoice_sub_total) || 0),
-      0
-    );
-    setInvoice((prev) => ({ ...prev, invoice_total: newTotal.toString() }));
-  };
-
-  const handleDleteInvoice = async (invoiceSubId, index) => {
-   
-    if (window.confirm("Are you sure you want to delete this payment entry?")) {
-      try {
-        const token = localStorage.getItem("token");
-        await axios.delete(
-          `${BASE_URL}/api/panel-delete-invoiceSub/${invoiceSubId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        const filteredUsers = users.filter((_, i) => i !== index);
-        setUsers(filteredUsers);
-        fetchInvoiceEdit()
-        toast.success("invoice entry deleted successfully");
-      
-      } catch (error) {
-        console.error("Error deleting invoice sub", error);
-        toast.error("Failed to delete invoice entry");
-      }
-    }
-  };
-
-  const validateOnlyDigits = (inputtxt) => {
-    const phoneno = /^\d*\.?\d*$/;
-    return inputtxt.match(phoneno) || inputtxt.length === 0;
-  };
-
-  const onInputChange = (e) => {
-    const { name, value } = e.target;
-    if (name === "invoice_total") {
-      if (validateOnlyDigits(value)) {
-        setInvoice((prev) => ({ ...prev, [name]: value }));
-      }
-    } else {
-      setInvoice((prev) => ({ ...prev, [name]: value }));
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (
-      !invoice.invoice_date ||
-      !invoice.invoice_from_id ||
-      !invoice.invoice_to_id ||
-      !invoice.invoice_total
-    ) {
-      toast.error("Please fill all required fields");
-      return;
-    }
-
-    try {
-      setIsButtonDisabled(true);
-      const data = {
-        invoice_date: invoice.invoice_date,
-        invoice_year: invoice.invoice_year,
-        invoice_from_id: invoice.invoice_from_id,
-        invoice_to_id: invoice.invoice_to_id,
-        invoice_total: invoice.invoice_total,
-        invoice_no: invoice.invoice_no,
-        invoice_data: users.map((user) => ({
-          id: user.id,
-          invoice_sub_bill_no: user.invoice_sub_bill_no,
-
-          invoice_comm: user.invoice_comm,
-        })),
-      };
-
-      await axios.put(`${BASE_URL}/api/panel-update-invoice/${id}`, data, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+      userTypes.forEach((user) => {
+        newColumnSelections[page][user.id] = false;
       });
 
-      toast.success("Invoice Updated Successfully");
-      navigate("/invoice-list");
+      const pageButtons = usercontrol
+        .filter((item) => item.pages === page)
+        .map((item) => item.button);
+
+      pageButtons.forEach((button) => {
+        const buttonControl = usercontrol.find(
+          (item) => item.button === button
+        );
+        newPermissions[button] = {
+          id: buttonControl.id,
+          permissions: {},
+        };
+        userTypes.forEach((user) => {
+          const userTypeArray = buttonControl?.usertype ? buttonControl.usertype.split(",") : [];
+          newPermissions[button].permissions[user.id] = userTypeArray.includes(user.id) || false;
+        });
+      });
+    });
+
+    setPermissions(newPermissions);
+    setPageSelections(newPageSelections);
+    setColumnSelections(newColumnSelections);
+  }, [usercontrol]);
+
+  const handlePermissionChange = async (buttonId, userId, page) => {
+    if (columnSelections[page]?.[userId]) return;
+
+    const buttonData = permissions[buttonId];
+    const newPermissions = {
+      ...buttonData.permissions,
+      [userId]: !buttonData.permissions[userId],
+    };
+
+    const updatedUserTypes = Object.entries(newPermissions)
+      .filter(([_, hasPermission]) => hasPermission)
+      .map(([id]) => id);
+
+    const updatedData = {
+      pages: page,
+      button: buttonId,
+      usertype: updatedUserTypes,
+      status: "Active",
+    };
+
+    try {
+      await updatePermissions(buttonData.id, updatedData);
+      setPermissions((prev) => ({
+        ...prev,
+        [buttonId]: {
+          ...prev[buttonId],
+          permissions: newPermissions,
+        },
+      }));
     } catch (error) {
-      console.error("Error updating invoice", error);
-      toast.error("Error updating invoice");
-    } finally {
-      setIsButtonDisabled(false);
+      console.error("Failed to update permission:", error);
     }
   };
 
-  const FormLabel = ({ children, required }) => (
-    <label className="block text-sm font-semibold text-black mb-1">
-      {children}
-      {required && <span className="text-red-500 ml-1">*</span>}
-    </label>
-  );
+  if (loading) {
+    return (
+      <Layout>
+        <div className="flex bg-white items-center justify-center h-64">
+          <Spinner className="h-8 w-8" />
+        </div>
+      </Layout>
+    );
+  }
 
-  const inputClassSelect =
-    "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 border-blue-500";
-  const inputClass =
-    "w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-blue-500";
+  if (error) {
+    return (
+      <Layout>
+        <div className="flex items-center justify-center h-64">
+          <Typography color="red" className="text-lg">
+            Error loading user controls
+          </Typography>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
-      <div className="bg-[#FFFFFF] p-2 rounded-lg">
-        <div className="sticky top-0 p-2 mb-4 border-b-2 border-red-500 rounded-lg bg-[#E1F5FA]">
-          <h2 className="px-5 text-[black] text-lg flex flex-row justify-between items-center rounded-xl p-2">
-            <div className="flex items-center gap-2">
-              <IconInfoCircle className="w-4 h-4" />
-              <span>Edit Invoice</span>
-            </div>
-            <IconArrowBack
-              onClick={() => navigate("/invoice-list")}
-              className="cursor-pointer hover:text-red-600"
-            />
-          </h2>
+      <div className="bg-white p-4 mb-4 rounded-lg shadow-md">
+        <div className="flex items-center justify-between mb-6">
+          <Typography variant="h4" color="blue-gray">
+            User Control List
+          </Typography>
+
+            <Button
+            onClick={() => navigate(`/create-createMTest`)}
+            className="flex items-center gap-2"
+            color="blue"
+          >
+            Create Roles
+          </Button>
         </div>
-        <form
-          onSubmit={handleSubmit}
-          className="w-full max-w-7xl rounded-lg mx-auto p-4 space-y-6"
-        >
-          <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-4 gap-6">
-            <div>
-              <FormLabel required>Buyer</FormLabel>
-              <select
-                name="invoice_from_id"
-                value={invoice.invoice_from_id}
-                onChange={onInputChange}
-                required
-                disabled
-                className={inputClassSelect}
+
+        {pageOptions.map((page) => {
+          const pageButtons = usercontrol
+            .filter((item) => item.pages === page)
+            .map((item) => ({
+              value: item.button,
+              label: item.button,
+            }));
+
+          return (
+            <Card key={page} className="mb-8">
+              <CardHeader
+                floated={false}
+                shadow={false}
+                className="rounded-none px-4 py-3"
               >
-                <option value="">Select Buyer</option>
-                {buyer.map((option) => (
-                  <option key={option.buyer_company} value={option.id}>
-                    {option.buyer_company}
-                  </option>
-                ))}
-              </select>
-            </div>
+                <Typography variant="h5" color="blue-gray">
+                  {page}
+                </Typography>
+              </CardHeader>
 
-            <div>
-              <FormLabel required>Supplier</FormLabel>
-              <select
-                name="invoice_to_id"
-                value={invoice.invoice_to_id}
-                onChange={onInputChange}
-                required
-                disabled
-                className={inputClassSelect}
-              >
-                <option value="">Select Supplier</option>
-                {vendor.map((option) => (
-                  <option key={option.vendor_company} value={option.id}>
-                    {option.vendor_company}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-          
-
-            <div>
-              <FormLabel required>Invoice Year</FormLabel>
-              <input
-                type="text"
-                name="invoice_year"
-                required
-                value={invoice.invoice_year}
-                onChange={onInputChange}
-                className={inputClass}
-                disabled
-              />
-            </div>
-            <div>
-              <FormLabel required>Invoice No</FormLabel>
-              <input
-                required
-                type="text"
-                name="invoice_no"
-                value={invoice.invoice_no}
-                onChange={onInputChange}
-                className={inputClass}
-                disabled
-              />
-            </div>
-            <div>
-              <FormLabel required>Invoice Date</FormLabel>
-              <input
-                type="date"
-                required
-                name="invoice_date"
-                value={invoice.invoice_date}
-                onChange={onInputChange}
-                className={inputClass}
-              />
-            </div>
-            <div>
-              <FormLabel required>Invoice Total</FormLabel>
-              <input
-                required
-                type="text"
-                name="invoice_total"
-                value={invoice.invoice_total}
-                onChange={onInputChange}
-                className={inputClass}
-              />
-            </div>
-
-           
-          </div>
-
-          <hr />
-
-          <div>
-            <h2 className="text-[black] text-lg flex flex-row justify-between items-center">
-              <div className="flex items-center gap-2">
-                <IconInfoCircle className="w-4 h-4" />
-                <span>Invoice Details</span>
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-max table-auto text-left">
+                  <thead>
+                    <tr>
+                      <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-semibold leading-none"
+                        >
+                          Button Name
+                        </Typography>
+                      </th>
+                      {userTypes.map((user) => (
+                        <th
+                          key={user.id}
+                          className="border-b border-blue-gray-100 bg-blue-gray-50 p-4"
+                        >
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-semibold leading-none"
+                          >
+                            {user.label}
+                          </Typography>
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {pageButtons.map((button) => (
+                      <tr key={button.value}>
+                        <td className="p-4 border-b border-blue-gray-50">
+                          <Typography variant="small" color="blue-gray">
+                            {button.label}
+                          </Typography>
+                        </td>
+                        {userTypes.map((user) => (
+                          <td
+                            key={user.id}
+                            className="p-4 border-b border-blue-gray-50"
+                          >
+                            <Checkbox
+                              checked={
+                                permissions[button.value]?.permissions[
+                                  user.id
+                                ] ?? false
+                              }
+                              onChange={() =>
+                                handlePermissionChange(
+                                  button.value,
+                                  user.id,
+                                  page
+                                )
+                              }
+                              color="blue"
+                              disabled={columnSelections[page]?.[user.id]}
+                              className={
+                                columnSelections[page]?.[user.id]
+                                  ? "opacity-50"
+                                  : ""
+                              }
+                            />
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
-            </h2>
-
-            {users.map((user, index) => (
-              <div
-                key={user.id || index}
-                className="grid grid-cols-1 mt-3 md:grid-cols-1 lg:grid-cols-4 gap-6"
-              >
-                <div>
-                  <FormLabel>Bill No</FormLabel>
-                  <input
-                    type="text"
-                    name="invoice_sub_bill_no"
-                    value={user.invoice_sub_bill_no}
-                    onChange={(e) =>
-                      onChangeUser(index, "invoice_sub_bill_no", e.target.value)
-                    }
-                    disabled
-                    className={inputClass}
-                  />
-                </div>
-
-                <div>
-                  <FormLabel>Amount</FormLabel>
-                  <input
-                    type="text"
-                    name="invoice_sub_total"
-                    value={user.invoice_sub_total}
-                    onChange={(e) =>
-                      onChangeUser(index, "invoice_sub_total", e.target.value)
-                    }
-                    disabled
-                    className={inputClass}
-                  />
-                </div>
-
-                <div>
-                  <FormLabel>Commission</FormLabel>
-                  <input
-                    type="text"
-                    name="invoice_comm"
-                    value={user.invoice_comm}
-                    onChange={(e) =>
-                      onChangeUser(index, "invoice_comm", e.target.value)
-                    }
-                    className={inputClass}
-                  />
-                </div>
-
-                <div>
-                  <IconTrash
-                    onClick={() => handleDleteInvoice(user.id, index)}
-                    className="cursor-pointer translate-y-0 lg:translate-y-7 hover:text-red-600"
-                  />
-                </div>
-              </div>
-            ))}
-
-            <div>
-              <Button
-                className="text-center mt-2 text-sm font-[400] cursor-pointer flex items-center gap-1 text-white bg-blue-600 hover:bg-red-700 p-2 rounded-lg shadow-md"
-           
-              >
-                <IconPlus className="w-5 h-5" /> Add More
-              </Button>
-            </div>
-          </div>
-
-          {/* Form Actions */}
-          <div className="flex flex-wrap gap-4 justify-start">
-            <button
-              type="submit"
-              className="text-center text-sm font-[400] cursor-pointer w-36 text-white bg-blue-600 hover:bg-green-700 p-2 rounded-lg shadow-md"
-              disabled={isButtonDisabled}
-            >
-              {isButtonDisabled ? "Updating..." : "Update"}
-            </button>
-
-            <button
-              type="button"
-              className="text-center text-sm font-[400] cursor-pointer w-36 text-white bg-red-600 hover:bg-red-400 p-2 rounded-lg shadow-md"
-              onClick={() => navigate("/invoice-list")}
-            >
-              Back
-            </button>
-          </div>
-        </form>
+            </Card>
+          );
+        })}
       </div>
     </Layout>
   );
 };
 
-export default EditInvoice;
+export default UserManagement;

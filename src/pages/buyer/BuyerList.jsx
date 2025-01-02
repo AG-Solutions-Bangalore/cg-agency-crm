@@ -5,6 +5,7 @@ import BASE_URL from '../../base/BaseUrl';
 import axios from 'axios';
 import { IconEdit, IconPlus } from '@tabler/icons-react';
 import { MantineReactTable, useMantineReactTable } from 'mantine-react-table';
+import { BillingCreate, BuyerCreate, BuyerEdit } from '../../components/buttonIndex/ButtonComponents';
 
 const BuyerList = () => {
   const [buyerData, setBuyerData] = useState(null);
@@ -75,14 +76,17 @@ const BuyerList = () => {
 
           return (
             <div className="flex gap-2">
-              
-              <div
+              <BuyerEdit
+                onClick={() => navigate(`/buyer-edit/${id}`)}
+                className="flex items-center space-x-2"
+              />
+              {/* <div
                 onClick={() => navigate(`/buyer-edit/${id}`)}
                 className="flex items-center space-x-2"
                 title="Edit"
               >
                 <IconEdit className="h-5 w-5 text-blue-500 cursor-pointer" />
-              </div>
+              </div> */}
             
               
               
@@ -119,13 +123,17 @@ const BuyerList = () => {
               Buyer List
             </h1>
             <div className="flex gap-2">
-              <button
+              <BuyerCreate
+                 onClick={()=>navigate('/createBuyer')}
+                className=" flex flex-row items-center gap-1 text-center text-sm font-[400] cursor-pointer  w-[5rem] text-white bg-blue-600 hover:bg-red-700 p-2 rounded-lg shadow-md"
+              />
+              {/* <button
               onClick={()=>navigate('/createBuyer')}
                 className=" flex flex-row items-center gap-1 text-center text-sm font-[400] cursor-pointer  w-[7rem] text-white bg-blue-600 hover:bg-red-700 p-2 rounded-lg shadow-md"
               
               >
                 <IconPlus className='w-4 h-4'/> Buyer
-              </button>
+              </button> */}
               </div>
           </div>
         </div>

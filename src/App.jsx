@@ -25,6 +25,16 @@ import CreateInvoiceList from "./pages/invoice/CreateInvoiceList";
 import EditInvoice from "./pages/invoice/EditInvoice";
 import SupplierReport from "./pages/report/supplier/SupplierReport";
 import BuyerReport from "./pages/report/buyer/BuyerReport";
+import MonthWiseReportForm from "./pages/monthwiseReport/MonthWiseReportForm";
+import MonthWisePaymentReport from "./pages/monthwiseReport/MonthWisePaymentReport";
+import MonthWiseInvoiceReport from "./pages/monthwiseReport/MonthWiseInvoiceReport";
+import OutstandingReport from "./pages/outstandingReport/OutstandingReport";
+import OutstandingSupplierReport from "./pages/outstandingReport/OutstandingSupplierReport";
+import OutstandingBuyerReport from "./pages/outstandingReport/OutstandingBuyerReport";
+import MonthwiseSupplierOutstanding from "./pages/outstandingReport/MonthwiseSupplierOutstanding";
+import MonthwiseBuyerOutstanding from "./pages/outstandingReport/MonthwiseBuyerOutstanding";
+import UserManagement from "./pages/userManagement/UserManagement";
+import CreateButton from "./pages/userManagement/CreateButton";
 
 
 const App = () => {
@@ -64,6 +74,21 @@ const App = () => {
         {/* reports  */}
         <Route path="/report-supplier" element={<SupplierReport />} />
         <Route path="/report-buyer" element={<BuyerReport />} />
+
+        {/* monthwise report  */}
+        <Route path="/monthwise-report" element={<MonthWiseReportForm />} />
+        <Route path="/monthwise-payment-report" element={<MonthWisePaymentReport />} />
+        <Route path="/monthwise-invoice-report" element={<MonthWiseInvoiceReport />} />
+        {/* reports all  */}
+        <Route path="/outstanding-report" element={<OutstandingReport />} />
+        <Route path="/supplier-outstanding-report" element={<OutstandingSupplierReport />} />
+        <Route path="/buyer-outstanding-report" element={<OutstandingBuyerReport />} />
+        <Route path="/monthwise-supplier-outstanding-report" element={<MonthwiseSupplierOutstanding />} />
+        <Route path="/monthwise-buyer-outstanding-report" element={<MonthwiseBuyerOutstanding />} />
+
+        {/* user Management  */}
+        <Route path="/userManagement" element={<UserManagement />} />
+        <Route path="/create-createMTest" element={<CreateButton />} />
         
       </Routes>
     </>

@@ -29,7 +29,7 @@ const Footer = () => {
     <div className="bg-white rounded-lg shadow-sm p-4">
       <div className="flex flex-row items-center justify-between">
         <h2 className="text-xs text-gray-600">
-          Current Year: 2024
+          Current Year: 2025
         </h2>
         <p className="text-xs text-gray-600">
           Handcrafted with love by{" "}
