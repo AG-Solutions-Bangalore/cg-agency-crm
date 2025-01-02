@@ -1,21 +1,51 @@
-import { Box, Typography, Button } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Box, Typography } from "@mui/material";
 
 export const Upgrade = ({ isCollapsed }) => {
   return (
-    <>
+    <Box
+      sx={{
+        p: isCollapsed ? 1 : 2,
+        background: isCollapsed
+          ? "linear-gradient(45deg, #9c27b0, #673ab7)"
+          : "linear-gradient(135deg, #3f51b5, #2196f3)",
+        color: "white",
+        borderRadius: "12px",
+        textAlign: "center",
+        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)",
+        transition: "all 0.3s ease",
+      }}
+    >
       {!isCollapsed ? (
-        <Box display={"flex"} alignItems="center" gap={2} sx={{ m: 3  }}>
-          <>
-            <h2 className="text-xs  text-gray-600 border-b-2 border-dashed border-black">
-              Updated on: 30-12-2024
-            </h2>
-         
-          </>
-        </Box>
+        <>
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: "bold",
+              mb: 1,
+            }}
+          >
+            Version 1.0.7
+          </Typography>
+          <Typography
+            variant="body2"
+            sx={{
+              fontStyle: "italic",
+            }}
+          >
+            Enjoy the latest updates!
+          </Typography>
+        </>
       ) : (
-        ""
+        <Typography
+          variant="caption"
+          sx={{
+            fontStyle: "italic",
+            opacity: 0.8,
+          }}
+        >
+          v1.0.7
+        </Typography>
       )}
-    </>
+    </Box>
   );
 };

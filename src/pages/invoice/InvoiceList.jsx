@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { MantineReactTable, useMantineReactTable } from 'mantine-react-table';
 import BASE_URL from '../../base/BaseUrl';
 import axios from 'axios';
+import { InvoiceCreate, InvoiceEdit } from '../../components/buttonIndex/ButtonComponents';
 
 const InvoiceList = () => {
 
@@ -73,14 +74,17 @@ const InvoiceList = () => {
 
           return (
             <div className="flex gap-2">
-              
-              <div
+              <InvoiceEdit
+                 onClick={() => navigate(`/invoice-edit/${id}`)}
+                className="flex items-center space-x-2"
+              />
+              {/* <div
               onClick={() => navigate(`/invoice-edit/${id}`)}
                 className="flex items-center space-x-2"
                 title="Edit"
               >
                 <IconEdit className="h-5 w-5 text-blue-500 cursor-pointer" />
-              </div>
+              </div> */}
             
               
               
@@ -116,13 +120,17 @@ const InvoiceList = () => {
               Invoice List
             </h1>
             <div className="flex gap-2">
-              <button
+            <InvoiceCreate
+             onClick={()=>navigate('/createInvoice')}
+                className=" flex flex-row items-center gap-1 text-center text-sm font-[400] cursor-pointer  w-[5rem] text-white bg-blue-600 hover:bg-red-700 p-2 rounded-lg shadow-md"
+            />
+              {/* <button
               onClick={()=>navigate('/createInvoice')}
                 className=" flex flex-row items-center gap-1 text-center text-sm font-[400] cursor-pointer  w-[6rem] text-white bg-blue-600 hover:bg-red-700 p-2 rounded-lg shadow-md"
               
               >
                 <IconPlus className='w-4 h-4'/>Invoice
-              </button>
+              </button> */}
               </div>
           </div>
         </div>

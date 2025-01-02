@@ -8,6 +8,9 @@ export const ContextPanel = createContext();
 const AppProvider = ({ children }) => {
   const userTypeId = localStorage.getItem("id");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const token = localStorage.getItem("token");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
   const [year, setYear] = useState([]);
   useEffect(() => {
     const fetchYear = async () => {
@@ -35,8 +38,36 @@ const AppProvider = ({ children }) => {
     [year]
   );
 
+  const fetchPermissions = async () => {
+    setIsLoading(true);
+    setIsError(false);
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`${BASE_URL}/api/panel-fetch-usercontrol`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      // Store the entire `usercontrol` array in localStorage
+      localStorage.setItem("userControl", JSON.stringify(response.data?.usercontrol));
+
+      
+    } catch (error) {
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if(token){
+      fetchPermissions();
+    }
+  
+}, []);
+
+
   return (
-    <ContextPanel.Provider value={{ userTypeId, currentYear }}>
+    <ContextPanel.Provider value={{ userTypeId, currentYear,fetchPermissions }}>
       {children}
     </ContextPanel.Provider>
   );

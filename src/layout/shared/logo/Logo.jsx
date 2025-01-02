@@ -1,16 +1,15 @@
 import { styled } from "@mui/material";
 
 import { Link } from "react-router-dom";
-import logosmall from "../../../assets/logos/fts1.png";
-import logstrucn from "../../../assets/logos/fts_wm.png";
+import logstrucn from "../../../assets/logos/creativelogo.png";
 const LinkStyled = styled(Link)(() => ({
-  height: "63px",
+  height: "13px",
   width: "180px",
   overflow: "hidden",
   display: "block",
 }));
 const LargeLinkStyled = styled(Link)(() => ({
-  height: "63px",
+  height: "19px",
   width: "63px",
   overflow: "hidden",
   display: "block",
@@ -21,11 +20,11 @@ const Logo = ({ isCollapsed }) => {
     <>
       {!isCollapsed ? (
         <LinkStyled to="/home">
-          <img src={'https://agsl.online/static/media/header.16b93a3d.png'} alt="logo" className="h-16" priority />
+          <img src={'https://creativegarments.in/agency/img/logo.webp'} alt="logo" className="" priority />
         </LinkStyled>
       ) : (
         <LargeLinkStyled to="/home">
-          <img src={logstrucn} alt="logo" className="h-16" priority />
+          <img src={logstrucn} alt="logo"  priority />
         </LargeLinkStyled>
       )}
     </>
