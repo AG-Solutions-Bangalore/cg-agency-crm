@@ -70,16 +70,7 @@ const Header = ({ toggleMobileSidebar, toggleSidebar }) => {
 
         <Box flexGrow={1} />
 
-        <Stack spacing={1} direction="row" alignItems="center">
      
-            <IconInfoOctagon
-              width={20}
-              className="cursor-pointer"
-             
-            />
-          
-        </Stack>
-        
      
          
         <Stack spacing={1} direction="row" alignItems="center">

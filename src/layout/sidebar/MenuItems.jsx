@@ -20,6 +20,9 @@ import {
   IconDownload,
   IconPeace,
   IconBell,
+  IconBuilding,
+  IconBuildingBank,
+  IconWallet,
 } from "@tabler/icons-react";
 
 import { uniqueId } from "lodash";
@@ -46,25 +49,25 @@ const MenuItems = () => {
     {
       id: uniqueId(),
       title: "Supplier",
-      icon: IconReceipt,
+      icon: IconBuilding,
       href: "/supplier-list",
     },
     {
       id: uniqueId(),
       title: "Buyer",
-      icon: IconReceipt,
+      icon: IconUser,
       href: "/buyer-list",
     },
     {
       id: uniqueId(),
       title: "Billing",
-      icon: IconReceipt,
+      icon: IconBuildingBank,
       href: "/billing-list",
     },
     {
       id: uniqueId(),
       title: "Payment",
-      icon: IconReceipt,
+      icon: IconWallet,
       href: "/payment-list",
     },
     {

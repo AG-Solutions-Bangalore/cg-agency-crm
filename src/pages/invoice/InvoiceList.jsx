@@ -6,6 +6,7 @@ import { MantineReactTable, useMantineReactTable } from 'mantine-react-table';
 import BASE_URL from '../../base/BaseUrl';
 import axios from 'axios';
 import { InvoiceCreate, InvoiceEdit } from '../../components/buttonIndex/ButtonComponents';
+import moment from 'moment';
 
 const InvoiceList = () => {
 
@@ -44,6 +45,10 @@ const InvoiceList = () => {
         accessorKey: "invoice_date",
         header: "Date",
         size:150,
+        Cell: ({ row }) => {
+                  const date = row.original.invoice_date;
+                  return date ? moment(date).format("DD-MMM-YYYY") : "";
+                },
        
       },
       {

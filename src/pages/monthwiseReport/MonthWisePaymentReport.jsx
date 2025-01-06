@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { useReactToPrint } from "react-to-print";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
+import moment from "moment";
 
 const MonthWisePaymentReport = () => {
   const [payments, setPayments] = useState([]);
@@ -40,7 +41,7 @@ const MonthWisePaymentReport = () => {
 
         if (response.data.payment) {
           setPayments(response.data.payment);
-          groupPaymentsByVendorAndDate(response.data.payment);
+          groupPaymentsByVendorAndMonth(response.data.payment);
         }
       } catch (error) {
         console.error("Error fetching payment data:", error);
@@ -51,20 +52,41 @@ const MonthWisePaymentReport = () => {
     fetchPayments();
   }, []);
 
-  const groupPaymentsByVendorAndDate = (payments) => {
+  // const groupPaymentsByVendorAndDate = (payments) => {
+  //   const grouped = payments.reduce((acc, payment) => {
+  //     const { vendor_company, pay_date } = payment;
+  //     if (!acc[vendor_company]) {
+  //       acc[vendor_company] = {};
+  //     }
+  //     if (!acc[vendor_company][pay_date]) {
+  //       acc[vendor_company][pay_date] = [];
+  //     }
+  //     acc[vendor_company][pay_date].push(payment);
+  //     return acc;
+  //   }, {});
+  //   setGroupedPayments(grouped);
+  // };
+
+  const groupPaymentsByVendorAndMonth = (payments) => {
     const grouped = payments.reduce((acc, payment) => {
       const { vendor_company, pay_date } = payment;
+  
+      // Extract year and month from pay_date
+      const date = new Date(pay_date);
+      const monthKey = `${date.getFullYear()}-${date.getMonth() + 1}`; // e.g., "2023-9"
+  
       if (!acc[vendor_company]) {
         acc[vendor_company] = {};
       }
-      if (!acc[vendor_company][pay_date]) {
-        acc[vendor_company][pay_date] = [];
+      if (!acc[vendor_company][monthKey]) {
+        acc[vendor_company][monthKey] = [];
       }
-      acc[vendor_company][pay_date].push(payment);
+      acc[vendor_company][monthKey].push(payment);
       return acc;
     }, {});
     setGroupedPayments(grouped);
   };
+ 
 
   const handlePrint = useReactToPrint({
     content: () => reportRef.current,
@@ -99,7 +121,7 @@ const MonthWisePaymentReport = () => {
 
     Object.entries(groupedPayments).forEach(([vendor, dates]) => {
       content.push({
-        text: `Vendor: ${vendor}`,
+        text: ` ${vendor}`,
         style: "vendorHeader",
         margin: [0, 10, 0, 5],
       });
@@ -236,7 +258,7 @@ const MonthWisePaymentReport = () => {
 
           {Object.entries(groupedPayments).map(([vendor, dates]) => (
             <div key={vendor} className="mb-4">
-              <h2 className="text-lg font-bold mb-2">Vendor: {vendor}</h2>
+              <h2 className="text-lg font-bold mb-2"> {vendor}</h2>
 
               {Object.entries(dates).map(([date, payments]) => {
                 const formattedDate = new Date(date).toLocaleDateString(
@@ -288,7 +310,7 @@ const MonthWisePaymentReport = () => {
                               {payment.buyer_company}
                             </td>
                             <td className="text-center p-2 border border-black">
-                              {payment.pay_date}
+                              {moment(payment.pay_date).format("DD-MM-YYYY")}
                             </td>
                             <td className="text-center p-2 border border-black">
                               {payment.payment_bill_no}

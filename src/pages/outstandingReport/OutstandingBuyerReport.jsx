@@ -7,6 +7,7 @@ import { useReactToPrint } from "react-to-print";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import BASE_URL from "../../base/BaseUrl";
+import moment from "moment";
 const OutstandingBuyerReport = () => {
   const [payments, setPayments] = useState([]);
   const [groupedPayments, setGroupedPayments] = useState({});
@@ -98,14 +99,14 @@ const OutstandingBuyerReport = () => {
 
     Object.entries(groupedPayments).forEach(([vendor, buyers]) => {
       content.push({
-        text: `Buyer: ${vendor}`,
+        text: `${vendor}`,
         style: "vendorHeader",
         margin: [0, 10, 0, 5],
       });
 
       Object.entries(buyers).forEach(([buyer, payments]) => {
         content.push({
-          text: `Vendor: ${buyer}`,
+          text: `${buyer}`,
           style: "buyerHeader",
           margin: [0, 5, 0, 5],
         });
@@ -248,11 +249,11 @@ const OutstandingBuyerReport = () => {
 
           {Object.entries(groupedPayments).map(([buyer, vendors]) => (
             <div key={buyer} className="mb-4">
-              <h2 className="text-lg font-bold mb-2">Buyer: {buyer}</h2>
+              <h2 className="text-lg font-bold mb-2">{buyer}</h2>
 
               {Object.entries(vendors).map(([vendor, payments]) => (
                 <div key={vendor} className="mb-4">
-                  <h3 className="text-md font-semibold mb-2">Vendor: {vendor}</h3>
+                  <h3 className="text-md font-semibold mb-2">{vendor}</h3>
                   <Table
                     striped
                     highlightOnHover
@@ -297,7 +298,7 @@ const OutstandingBuyerReport = () => {
                             {index + 1}
                           </td>
                           <td className="text-center p-2 border border-black">
-                            {payment.billing_date}
+                            {moment(payment.billing_date).format("DD-MM-YYYY")}
                           </td>
                           <td className="text-center p-2 border border-black">
                             {payment.billing_no}

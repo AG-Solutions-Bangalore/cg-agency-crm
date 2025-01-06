@@ -1,28 +1,33 @@
-import React, { useEffect, useMemo, useState } from 'react'
-import Layout from '../../layout/Layout'
-import { IconEdit, IconPlus } from '@tabler/icons-react';
-import { MantineReactTable, useMantineReactTable } from 'mantine-react-table';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import BASE_URL from '../../base/BaseUrl';
-import { PaymentCreate, PaymentEdit } from '../../components/buttonIndex/ButtonComponents';
+import React, { useEffect, useMemo, useState } from "react";
+import Layout from "../../layout/Layout";
+import { IconEdit, IconPlus } from "@tabler/icons-react";
+import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import BASE_URL from "../../base/BaseUrl";
+import {
+  PaymentCreate,
+  PaymentEdit,
+} from "../../components/buttonIndex/ButtonComponents";
+import moment from "moment";
 
 const PaymentList = () => {
   const [paymentData, setPaymentData] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-
-
   const fetchPaymentData = async () => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await axios.get(`${BASE_URL}/api/panel-fetch-payment-list`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        `${BASE_URL}/api/panel-fetch-payment-list`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       setPaymentData(response.data?.payment);
     } catch (error) {
@@ -31,7 +36,6 @@ const PaymentList = () => {
       setLoading(false);
     }
   };
- 
 
   useEffect(() => {
     fetchPaymentData();
@@ -42,8 +46,11 @@ const PaymentList = () => {
       {
         accessorKey: "pay_date",
         header: "Date",
-        size:150,
-       
+        size: 150,
+        Cell: ({ row }) => {
+          const date = row.original.pay_date;
+          return date ? moment(date).format("DD-MMM-YYYY") : "";
+        },
       },
       {
         accessorKey: "vendor_company",
@@ -65,8 +72,7 @@ const PaymentList = () => {
         header: "Payment Refrence",
         size: 150,
       },
-     
-     
+
       {
         id: "id",
         header: "Action",
@@ -78,7 +84,7 @@ const PaymentList = () => {
           return (
             <div className="flex gap-2">
               <PaymentEdit
-               onClick={() => navigate(`/payment-edit/${id}`)}
+                onClick={() => navigate(`/payment-edit/${id}`)}
                 className="flex items-center space-x-2"
               />
               {/* <div
@@ -88,9 +94,6 @@ const PaymentList = () => {
               >
                 <IconEdit className="h-5 w-5 text-blue-500 cursor-pointer" />
               </div> */}
-            
-              
-              
             </div>
           );
         },
@@ -109,13 +112,12 @@ const PaymentList = () => {
     enableStickyHeader: true,
     enableStickyFooter: true,
     mantineTableContainerProps: { sx: { maxHeight: "400px" } },
- 
+
     initialState: { columnVisibility: { address: false } },
   });
   return (
-  <Layout>
-     <div className="max-w-screen">
-        
+    <Layout>
+      <div className="max-w-screen">
         <div className="bg-white p-4 mb-4 rounded-lg shadow-md">
           {/* Header Section */}
           <div className="flex flex-col md:flex-row justify-between gap-4 items-center">
@@ -124,7 +126,7 @@ const PaymentList = () => {
             </h1>
             <div className="flex gap-2">
               <PaymentCreate
-              onClick={()=>navigate('/createPayment')}
+                onClick={() => navigate("/createPayment")}
                 className=" flex flex-row items-center gap-1 text-center text-sm font-[400] cursor-pointer  w-[6rem] text-white bg-blue-600 hover:bg-red-700 p-2 rounded-lg shadow-md"
               />
               {/* <button
@@ -134,7 +136,7 @@ const PaymentList = () => {
               >
                 <IconPlus className='w-4 h-4'/>Payment
               </button> */}
-              </div>
+            </div>
           </div>
         </div>
 
@@ -142,8 +144,8 @@ const PaymentList = () => {
           <MantineReactTable table={table} />
         </div>
       </div>
-  </Layout>
-  )
-}
+    </Layout>
+  );
+};
 
-export default PaymentList
+export default PaymentList;

@@ -280,7 +280,7 @@ const EditBilling = () => {
                        required
                        value={billing.billing_year}
                        onChange={(e) => onInputChange(e)}
-                       className={inputClass}
+                         className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-blue-500 cursor-not-allowed"
                        disabled
                      />
                    </div>
@@ -329,7 +329,7 @@ const EditBilling = () => {
                        name="billing_price"
                        value={billing.billing_price}
                       
-                       className={inputClass}
+                        className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-blue-500 cursor-not-allowed"
                        readOnly
                      />
                    </div>

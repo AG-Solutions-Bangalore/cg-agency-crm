@@ -6,6 +6,7 @@ import { BadgeIndianRupee, Banknote, Building2, Users } from "lucide-react";
 import moment from "moment";
 import { IconInfoCircle } from "@tabler/icons-react";
 import BASE_URL from "../../base/BaseUrl";
+import { useNavigate } from "react-router-dom";
 
 const Loader = () => {
   return (
@@ -17,9 +18,11 @@ const Loader = () => {
   );
 };
 // Stylish Dashboard Card Component
-const DashboardCard = ({ icon: Icon, label, value, color = "blue" }) => {
+const DashboardCard = ({ icon: Icon, label, value, color ="blue",link }) => {
+  const navigate = useNavigate();
   return (
     <div
+    onClick={() => navigate(`${link}`)}
       className={`bg-white shadow-lg rounded-2xl p-5 border-l-4 border-${color}-500 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2`}
     >
       <div className="flex items-center justify-between cursor-pointer">
@@ -122,24 +125,28 @@ const Home = () => {
             label="Total Buyer"
             value={dashboardData.buyers}
             color="blue"
+            link={"/buyer-list"}
           />
           <DashboardCard
             icon={Building2}
             label="Total Supplier"
             value={dashboardData.suppliers}
             color="green"
+            link={"/supplier-list"}
           />
           <DashboardCard
             icon={BadgeIndianRupee}
             label="Total Payment"
             color="orange"
             value={dashboardData.payment}
+            link={"/payment-list"}
           />
           <DashboardCard
-            icon={Banknote}
+            icon={BadgeIndianRupee}
             label="Total Balance"
             color="purple"
             value={dashboardData.balance}
+            link={"/invoice-list"}
           />
         </div>
         <div className="grid grid-cols-1 gap-6 mb-4">
@@ -166,9 +173,9 @@ const Home = () => {
                 <td className="px-4 py-3">
                   &#8377;{item.billing_total_amount}
                 </td>
-                <td className="px-4 py-3">{item.total_received_sum}</td>
+                <td className="px-4 py-3"> &#8377;{item.total_received_sum}</td>
                 <td className="px-4 py-3">
-                  {item.billing_total_amount - item.total_received_sum}
+                &#8377;{item.billing_total_amount - item.total_received_sum}
                 </td>
               </tr>
             )}
