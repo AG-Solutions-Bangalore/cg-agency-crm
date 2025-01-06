@@ -173,26 +173,26 @@ const UserManagement = () => {
 
   if (loading) {
     return (
-      <Layout>
+    
         <div className="flex bg-white items-center justify-center h-64">
           <div className="animate-spin h-8 w-8 border-4 border-blue-500 rounded-full border-t-transparent"></div>
         </div>
-      </Layout>
+     
     );
   }
 
   if (error) {
     return (
-      <Layout>
+     
         <div className="flex items-center justify-center h-64">
           <p className="text-red-500 text-lg">Error loading user controls</p>
         </div>
-      </Layout>
+    
     );
   }
 
   return (
-    <Layout>
+    <>
      <div className="min-h-screen bg-gray-100 ">
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           {/* Header Section */}
@@ -331,7 +331,7 @@ const UserManagement = () => {
           </DialogActions>
         </Dialog>
       </div>
-    </Layout>
+    </>
   );
 };
 

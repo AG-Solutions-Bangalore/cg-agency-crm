@@ -18,7 +18,7 @@ const SignIn = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const { fetchPermissions } = useContext(ContextPanel);
+  const { fetchPermissions,fetchPagePermission } = useContext(ContextPanel);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -40,7 +40,8 @@ const SignIn = () => {
           localStorage.setItem("email", res.data.UserInfo.user.email);
           localStorage.setItem("userType", res.data.UserInfo.user.id);
           localStorage.setItem("token", token);
-          fetchPermissions();
+          await fetchPagePermission()
+          await fetchPermissions();
           toast.success("Successfully logged in");
           navigate("/home");
         } else {
