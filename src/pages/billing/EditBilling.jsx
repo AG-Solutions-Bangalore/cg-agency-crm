@@ -225,7 +225,8 @@ const EditBilling = () => {
                        value={billing.billing_from_id}
                        onChange={(e) => onInputChange(e)}
                        required
-                       className={inputClassSelect}
+                       className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 border-blue-500 cursor-not-allowed"
+                       disabled
                      >
                        <option value="">Select Supplier </option>
                        {vendor.map((option) => (
@@ -246,7 +247,8 @@ const EditBilling = () => {
                        value={billing.billing_to_id}
                        onChange={(e) => onInputChange(e)}
                        required
-                       className={inputClassSelect}
+                       disabled
+                       className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 border-blue-500 cursor-not-allowed"
                      >
                        <option value="">Select Buyer </option>
                        {buyer.map((option) => (

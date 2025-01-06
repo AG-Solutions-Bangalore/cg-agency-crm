@@ -436,11 +436,12 @@ const EditInvoice = () => {
                 className="grid grid-cols-1 mt-3 md:grid-cols-1 lg:grid-cols-4 gap-6"
               >
                 <div>
-                  <FormLabel>Bill No</FormLabel>
+                  <FormLabel required>Bill No</FormLabel>
                   <input
                     type="text"
                     name="invoice_sub_bill_no"
                     value={user.invoice_sub_bill_no}
+                    required
                     onChange={(e) =>
                       onChangeUser(index, "invoice_sub_bill_no", e.target.value)
                     }
@@ -450,9 +451,10 @@ const EditInvoice = () => {
                 </div>
 
                 <div>
-                  <FormLabel>Amount</FormLabel>
+                  <FormLabel required>Amount</FormLabel>
                   <input
                     type="text"
+                    required
                     name="invoice_sub_total"
                     value={user.invoice_sub_total}
                     onChange={(e) =>

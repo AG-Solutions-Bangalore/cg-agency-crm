@@ -31,11 +31,11 @@ const DashboardCard = ({ icon: Icon, label, value, color ="blue",link }) => {
             {label}
           </h3>
           <div className="flex items-center space-x-2">
-            <p className={`text-3xl font-bold text-${color}-600`}>{value}</p>
+            <p className={`text-3xl font-bold `}>{value}</p>
           </div>
         </div>
         <div className={` p-3 rounded-full`}>
-          <Icon className={`h-8 w-8 text-${color}-600`} />
+          <Icon className={`h-8 w-8 `} />
         </div>
       </div>
     </div>

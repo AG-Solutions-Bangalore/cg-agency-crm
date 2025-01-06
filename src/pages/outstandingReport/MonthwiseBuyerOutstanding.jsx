@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Table, Button, Title, Container, Center } from "@mantine/core";
+import { Table, Button, Title, Container, Center,Text } from "@mantine/core";
 import Layout from '../../layout/Layout'
 import axios from "axios";
 import { toast } from "sonner";
@@ -252,6 +252,12 @@ const MonthwiseBuyerOutstanding = () => {
   return (
    <Layout>
         <div className="p-6 max-w-screen bg-white">
+             {payments.length === 0 ? (
+                            <Center className="mt-6">
+                              <Text>No Monthwise Buyer data available.</Text>
+                            </Center>
+                          ) : (
+                            <>
                     <div ref={reportRef} className="bg-white">
                       
                       <Title
@@ -267,13 +273,14 @@ const MonthwiseBuyerOutstanding = () => {
                           <h2 className="text-lg font-bold mb-2"> {vendor}</h2>
             
                           {Object.entries(dates).map(([date, payments]) => {
-                            const formattedDate = new Date(date).toLocaleDateString(
-                              "en-US",
-                              {
-                                year: "numeric",
-                                month: "long",
-                              }
-                            );
+                            const formattedDate = moment(date, "YYYY-MM-DD").format("MMMM YYYY");
+                            // const formattedDate = new Date(date).toLocaleDateString(
+                            //   "en-US",
+                            //   {
+                            //     year: "numeric",
+                            //     month: "long",
+                            //   }
+                            // );
             
                             return (
                               <div key={date} className="mb-">
@@ -388,6 +395,7 @@ const MonthwiseBuyerOutstanding = () => {
                         Download Report
                       </Button>
                     </Center>
+                    </> )}
                   </div>
    </Layout>
   )

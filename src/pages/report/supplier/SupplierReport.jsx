@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Table, Button, Title, Container, Center } from "@mantine/core";
+import { Table, Button, Title, Container, Center,Text } from "@mantine/core";
 import Layout from "../../../layout/Layout";
 import { useReactToPrint } from "react-to-print";
 import pdfMake from "pdfmake/build/pdfmake";
@@ -174,6 +174,11 @@ const SupplierReport = () => {
           >
             Supplier Report
           </Title>
+          {vendors.length === 0 ? (
+            <Center>
+              <Text>No supplier data available.</Text>
+            </Center>
+          ) : (
           <Table
             striped
             highlightOnHover
@@ -220,7 +225,11 @@ const SupplierReport = () => {
               ))}
             </tbody>
           </Table>
+          )}
         </div>
+        {vendors.length === 0 ? (
+            ("")
+          ) : (
         <Center className="mt-6">
           <Button
             onClick={handlePrint}
@@ -241,7 +250,9 @@ const SupplierReport = () => {
                       Download Report
                     </Button>
         </Center>
+          )}
       </div>
+    
     </Layout>
   );
 };
