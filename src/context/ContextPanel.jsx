@@ -37,6 +37,25 @@ const AppProvider = ({ children }) => {
     () => year?.current_year || "N/A",
     [year]
   );
+  const fetchPagePermission = async () => {
+    setIsLoading(true);
+    setIsError(false);
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`${BASE_URL}/api/panel-fetch-usercontrol-new`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+     
+      // array in local storage
+      localStorage.setItem("pageControl", JSON.stringify(response.data?.usercontrol));
+
+      
+    } catch (error) {
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const fetchPermissions = async () => {
     setIsLoading(true);
@@ -67,7 +86,7 @@ const AppProvider = ({ children }) => {
 
 
   return (
-    <ContextPanel.Provider value={{ userTypeId, currentYear,fetchPermissions }}>
+    <ContextPanel.Provider value={{ userTypeId, currentYear,fetchPermissions ,fetchPagePermission}}>
       {children}
     </ContextPanel.Provider>
   );

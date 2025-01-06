@@ -30,6 +30,44 @@ import { uniqueId } from "lodash";
 const MenuItems = () => {
   // Get user type from localStorage
   const userType = localStorage.getItem('userType');
+  const pageControl = JSON.parse(localStorage.getItem("pageControl") || [])
+  console.log("babjdas",pageControl)
+  const isMenuItemAllowed = (href) => {
+    // Remove leading slash for comparison
+    const itemUrl = href;
+    
+    const routeData = pageControl.find(route => route.url === itemUrl);
+    
+    if (!routeData) return false;
+
+    const allowedUsers = routeData.usertype ? routeData.usertype.split(",") : [];
+    return allowedUsers.includes(userType) && routeData.status == "Active";
+  };
+
+  // Function to filter menu items based on permissions
+  const filterMenuItems = (items) => {
+    return items.filter(item => {
+      // Keep navigation labels
+      if (item.navlabel) return true;
+
+      // Check permissions for items with subItems
+      if (item.subItems) {
+        const filteredSubItems = item.subItems.filter(subItem => 
+          isMenuItemAllowed(subItem.href)
+        );
+        
+        // Only keep parent items that have allowed subItems
+        if (filteredSubItems.length > 0) {
+          item.subItems = filteredSubItems;
+          return true;
+        }
+        return false;
+      }
+
+      // Check permissions for regular menu items
+      return isMenuItemAllowed(item.href);
+    });
+  };
 
   const baseMenuItems = [
     {
@@ -97,32 +135,32 @@ const MenuItems = () => {
           icon: IconCopy,
           href: "/report-buyer",
         },
+        {
+          id: uniqueId(),
+          title: "Outstanding",
+          icon: IconReceipt,
+          href: "/outstanding-report",
+        },
+        {
+          id: uniqueId(),
+          title: "Monthwise",
+          icon: IconReceipt,
+          href: "/monthwise-report",
+        },
       ],
     },
+  
     {
-      id: uniqueId(),
-      title: "Reports",
-      icon: IconReceipt,
-      href: "/outstanding-report",
-    },
-    {
-      id: uniqueId(),
-      title: "Monthwise Report",
-      icon: IconReceipt,
-      href: "/monthwise-report",
-    },
-  ];
-
-  // Only add User Management menu item if userType is '3'
-  if (userType === '3') {
-    baseMenuItems.push({
       id: uniqueId(),
       title: "User Management",
       icon: IconReceipt,
       href: "/userManagement",
-    });
-  }
+    },
+  ];
 
-  return baseMenuItems;
+
+
+  const filteredMenuItems = filterMenuItems(baseMenuItems)
+  return filteredMenuItems;
 };
 export default MenuItems;

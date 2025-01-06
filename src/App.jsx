@@ -35,6 +35,8 @@ import MonthwiseSupplierOutstanding from "./pages/outstandingReport/MonthwiseSup
 import MonthwiseBuyerOutstanding from "./pages/outstandingReport/MonthwiseBuyerOutstanding";
 import UserManagement from "./pages/userManagement/UserManagement";
 import CreateButton from "./pages/userManagement/CreateButton";
+import PageManagement from "./pages/userManagement/PageManagement";
+import TabIndex from "./pages/userManagement/TabIndex";
 
 
 const App = () => {
@@ -87,7 +89,7 @@ const App = () => {
         <Route path="/monthwise-buyer-outstanding-report" element={<MonthwiseBuyerOutstanding />} />
 
         {/* user Management  */}
-        <Route path="/userManagement" element={<UserManagement />} />
+        <Route path="/userManagement" element={<TabIndex />} />
         <Route path="/create-createMTest" element={<CreateButton />} />
         
       </Routes>
