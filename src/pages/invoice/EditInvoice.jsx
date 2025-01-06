@@ -338,7 +338,7 @@ const EditInvoice = () => {
                 onChange={onInputChange}
                 required
                 disabled
-                className={inputClassSelect}
+                className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 border-blue-500 cursor-not-allowed"
               >
                 <option value="">Select Buyer</option>
                 {buyer.map((option) => (
@@ -357,7 +357,7 @@ const EditInvoice = () => {
                 onChange={onInputChange}
                 required
                 disabled
-                className={inputClassSelect}
+                className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 border-blue-500 cursor-not-allowed"
               >
                 <option value="">Select Supplier</option>
                 {vendor.map((option) => (
@@ -378,7 +378,7 @@ const EditInvoice = () => {
                 required
                 value={invoice.invoice_year}
                 onChange={onInputChange}
-                className={inputClass}
+        className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-blue-500 cursor-not-allowed"
                 disabled
               />
             </div>
@@ -390,7 +390,7 @@ const EditInvoice = () => {
                 name="invoice_no"
                 value={invoice.invoice_no}
                 onChange={onInputChange}
-                className={inputClass}
+               className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-blue-500 cursor-not-allowed"
                 disabled
               />
             </div>
@@ -445,7 +445,7 @@ const EditInvoice = () => {
                       onChangeUser(index, "invoice_sub_bill_no", e.target.value)
                     }
                     disabled
-                    className={inputClass}
+                    className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-blue-500 cursor-not-allowed"
                   />
                 </div>
 
@@ -459,7 +459,7 @@ const EditInvoice = () => {
                       onChangeUser(index, "invoice_sub_total", e.target.value)
                     }
                     disabled
-                    className={inputClass}
+                     className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-blue-500 cursor-not-allowed"
                   />
                 </div>
 

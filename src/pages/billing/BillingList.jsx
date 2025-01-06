@@ -6,6 +6,7 @@ import axios from 'axios';
 import { IconEdit, IconPlus } from '@tabler/icons-react';
 import { MantineReactTable, useMantineReactTable } from 'mantine-react-table';
 import { BillingCreate, BillingEdit } from '../../components/buttonIndex/ButtonComponents';
+import moment from 'moment';
 
 const BillingList = () => {
   const [billingData, setBillingData] = useState(null);
@@ -43,6 +44,10 @@ const BillingList = () => {
         accessorKey: "billing_date",
         header: "Date",
         size:150,
+        Cell: ({ row }) => {
+          const date = row.original.billing_date;
+          return date ? moment(date).format("DD-MMM-YYYY") : "";
+        },
        
       },
       {

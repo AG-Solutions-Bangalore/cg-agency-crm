@@ -21,11 +21,11 @@ const CreateBilling = () => {
     billing_no: "",
     billing_from_id: "",
     billing_to_id: "",
-    billing_total_amount: "",
-    billing_tax: "",
-    billing_price: "",
-    billing_discount: "",
-    billing_other: "",
+    billing_total_amount: "0",
+    billing_tax: "0",
+    billing_price: "0",
+    billing_discount: "0",
+    billing_other: "0",
     billing_remakrs: "",
   });
   const [isButtonDisableds, setIsButtonDisableds] = useState(false);
@@ -319,7 +319,7 @@ const CreateBilling = () => {
                 required
                 value={currentYear}
                 onChange={(e) => onInputChange(e)}
-                className={inputClass}
+                className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-blue-500 cursor-not-allowed"
                 disabled
               />
             </div>
@@ -368,7 +368,7 @@ const CreateBilling = () => {
                 name="billing_price"
                 value={billing.billing_price}
                
-                className={inputClass}
+                   className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-blue-500 cursor-not-allowed"
                 readOnly
               />
             </div>

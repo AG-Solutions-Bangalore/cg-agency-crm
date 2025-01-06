@@ -156,7 +156,7 @@ const EditSupplier = () => {
           id="addIndiv"
           className="w-full max-w-7xl  rounded-lg mx-auto p-4 space-y-6 "
         >
-          <div className="grid grid-cols-1  md:grid-cols-1 lg:grid-cols-3   gap-6">
+          <div className="grid grid-cols-1  md:grid-cols-1 lg:grid-cols-4   gap-6">
             {/* Supplier Company  */}
             <div>
               <FormLabel required>Supplier Company</FormLabel>
@@ -193,8 +193,21 @@ const EditSupplier = () => {
                 required
               />
             </div>
+                        {/* Mobile  */}
+                        <div>
+              <FormLabel required>Mobile</FormLabel>
+              <input
+                type="tel"
+                name="vendor_mobile"
+                value={vendor.vendor_mobile}
+                onChange={(e) => onInputChange(e)}
+                className={inputClass}
+                required
+                maxLength={10}
+              />
+            </div>
             {/* Address  */}
-            <div className="col-span-0 lg:col-span-2">
+            <div className="col-span-0 lg:col-span-4">
               <FormLabel required>Address</FormLabel>
               <textarea
                 type="text"
@@ -208,19 +221,7 @@ const EditSupplier = () => {
               />
             </div>
 
-            {/* Mobile  */}
-            <div>
-              <FormLabel required>Mobile</FormLabel>
-              <input
-                type="tel"
-                name="vendor_mobile"
-                value={vendor.vendor_mobile}
-                onChange={(e) => onInputChange(e)}
-                className={inputClass}
-                required
-                maxLength={10}
-              />
-            </div>
+
 
             {/* Email  */}
             <div>

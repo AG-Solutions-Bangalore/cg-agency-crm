@@ -150,6 +150,11 @@ const CreateInvoiceList = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (selectedBills.length === 0) {
+      toast.error("Please select at least one bill before submitting.");
+      setIsButtonDisableds(false);
+      return;
+    }
     const selectedBillsTotal = selectedBills.reduce((sum, bill) => sum + bill.amount, 0);
     const invoiceTotal = parseFloat(invoice.invoice_total);
 
@@ -250,7 +255,7 @@ const CreateInvoiceList = () => {
                 required
                 value={currentYear}
                 onChange={onInputChange}
-                className={inputClass}
+                className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-blue-500 cursor-not-allowed"
                 disabled
               />
             </div>

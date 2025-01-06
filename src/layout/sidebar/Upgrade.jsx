@@ -24,7 +24,7 @@ export const Upgrade = ({ isCollapsed }) => {
               mb: 1,
             }}
           >
-            Version 1.0.7
+            Version 1.1.3
           </Typography>
           <Typography
             variant="body2"
@@ -43,7 +43,7 @@ export const Upgrade = ({ isCollapsed }) => {
             opacity: 0.8,
           }}
         >
-          v1.0.7
+          v1.1.3
         </Typography>
       )}
     </Box>

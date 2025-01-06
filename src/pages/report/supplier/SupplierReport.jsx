@@ -161,7 +161,7 @@ const SupplierReport = () => {
       `${BASE_URL}/api/panel-download-vendor-report`,
       "Vendor_Report.csv"
     );
-    toast.success("Vendor Report Download Successfully");
+    toast.success("Supplier Report Download Successfully");
   };
 
   return (

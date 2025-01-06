@@ -317,7 +317,7 @@ const CreatePayment = () => {
                 required
                 value={currentYear}
                 onChange={(e) => onInputChange(e)}
-                className={inputClass}
+                className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-500 border-blue-500 cursor-not-allowed"
                 disabled
               />
             </div>
@@ -361,7 +361,7 @@ const CreatePayment = () => {
               <div className="grid grid-cols-1 mt-3  md:grid-cols-1 lg:grid-cols-3   gap-6">
                 {/* Bill No  */}
                 <div>
-                  <FormLabel>Bill No</FormLabel>
+                  <FormLabel required>Bill No</FormLabel>
                   <select
                     name="payment_bill_no"
                     value={user.payment_bill_no}
@@ -369,6 +369,7 @@ const CreatePayment = () => {
                       onChangeUser(index, "payment_bill_no", e.target.value)
                     }
                     className={inputClassSelect}
+                    required
                   >
                     <option value="">Select Bill No </option>
                     {paymentBill.map((option) => (
@@ -381,7 +382,7 @@ const CreatePayment = () => {
                 </div>
                 {/*  Amount  */}
                 <div>
-                  <FormLabel>Amount</FormLabel>
+                  <FormLabel required>Amount</FormLabel>
                   <input
                     type="tel"
                     name="payment_amount"
@@ -390,6 +391,7 @@ const CreatePayment = () => {
                       onChangeUser(index, "payment_amount", e.target.value)
                     }
                     className={inputClass}
+                    required
                   />
                 </div>
                 <div>
