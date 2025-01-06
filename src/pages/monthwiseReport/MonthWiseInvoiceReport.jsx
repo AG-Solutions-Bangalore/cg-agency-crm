@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { useReactToPrint } from "react-to-print";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
-import { Table, Button, Title, Container, Center } from "@mantine/core";
+import { Table, Button, Title, Container, Center,Text } from "@mantine/core";
 import moment from 'moment';
 const MonthWiseInvoiceReport = () => {
     const [payments, setPayments] = useState([]);
@@ -246,6 +246,12 @@ const MonthWiseInvoiceReport = () => {
   return (
    <Layout>
      <div className="p-6 max-w-screen bg-white">
+        {payments.length === 0 ? (
+                        <Center className="mt-6">
+                          <Text>No Supplier data available.</Text>
+                        </Center>
+                      ) : (
+                        <>
            <div ref={reportRef} className="bg-white">
              
              <Title
@@ -261,13 +267,14 @@ const MonthWiseInvoiceReport = () => {
                  <h2 className="text-lg font-bold mb-2"> {vendor}</h2>
    
                  {Object.entries(dates).map(([date, payments]) => {
-                   const formattedDate = new Date(date).toLocaleDateString(
-                     "en-US",
-                     {
-                       year: "numeric",
-                       month: "long",
-                     }
-                   );
+                  const formattedDate = moment(date, "YYYY-MM-DD").format("MMMM YYYY");
+                  //  const formattedDate = new Date(date).toLocaleDateString(
+                  //    "en-US",
+                  //    {
+                  //      year: "numeric",
+                  //      month: "long",
+                  //    }
+                  //  );
    
                    return (
                      <div key={date} className="mb-">
@@ -351,6 +358,7 @@ const MonthWiseInvoiceReport = () => {
                Download Report
              </Button>
            </Center>
+           </> )}
          </div>
    </Layout>
   )

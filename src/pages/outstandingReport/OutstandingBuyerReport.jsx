@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Table, Button, Title, Container, Center } from "@mantine/core";
+import { Table, Button, Title, Container, Center,Text } from "@mantine/core";
 import Layout from "../../layout/Layout";
 import axios from "axios";
 import { toast } from "sonner";
@@ -239,6 +239,12 @@ const OutstandingBuyerReport = () => {
   return (
     <Layout>
       <div className="p-6 max-w-screen bg-white">
+           {payments.length === 0 ? (
+                          <Center className="mt-6">
+                            <Text>No Buyer data available.</Text>
+                          </Center>
+                        ) : (
+                          <>
         <div ref={reportRef} className="bg-white">
           <Title
             align="center"
@@ -354,6 +360,8 @@ const OutstandingBuyerReport = () => {
             Download Report
           </Button>
         </Center>
+              </>
+            )}
       </div>
     </Layout>
   );

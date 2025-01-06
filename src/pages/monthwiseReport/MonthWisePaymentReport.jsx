@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Table, Button, Title, Container, Center } from "@mantine/core";
+import { Table, Button, Title, Container, Center,Text } from "@mantine/core";
 import Layout from "../../layout/Layout";
 import BASE_URL from "../../base/BaseUrl";
 import axios from "axios";
@@ -246,6 +246,12 @@ const MonthWisePaymentReport = () => {
   return (
     <Layout>
       <div className="p-6 max-w-screen bg-white">
+           {payments.length === 0 ? (
+                          <Center className="mt-6">
+                            <Text>No Monthwise Payment data available.</Text>
+                          </Center>
+                        ) : (
+                          <>
         <div ref={reportRef} className="bg-white">
           
           <Title
@@ -351,6 +357,7 @@ const MonthWisePaymentReport = () => {
             Download Report
           </Button>
         </Center>
+        </> )}
       </div>
     </Layout>
   );

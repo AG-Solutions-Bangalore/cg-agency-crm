@@ -43,7 +43,7 @@ const BillingList = () => {
       {
         accessorKey: "billing_date",
         header: "Date",
-        size:150,
+        size:50,
         Cell: ({ row }) => {
           const date = row.original.billing_date;
           return date ? moment(date).format("DD-MMM-YYYY") : "";
@@ -53,7 +53,7 @@ const BillingList = () => {
       {
         accessorKey: "billing_no",
         header: "Bill No",
-        size: 150,
+        size: 50,
       },
       {
         accessorKey: "vendor_company",
@@ -63,22 +63,22 @@ const BillingList = () => {
       {
         accessorKey: "buyer_company",
         header: "Buyer",
-        size: 150,
+        size: 50,
       },
       {
         accessorKey: "billing_total_amount",
         header: "Total Amount",
-        size: 150,
+        size: 50,
       },
       {
         accessorKey: "billing_tax",
         header: "Tax",
-        size: 150,
+        size: 50,
       },
       {
         accessorKey: "billing_discount",
         header: "	Discount",
-        size: 150,
+        size: 50,
       },
       {
         accessorKey: "billing_other",
